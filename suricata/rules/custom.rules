@@ -1,0 +1,2 @@
+alert tcp any 466 -> any any (msg:"тоже спам"; sid:1234568; rev:1;)
+alert tcp any 465 -> any any (msg:"спам"; sid:1234567; rev:1;)

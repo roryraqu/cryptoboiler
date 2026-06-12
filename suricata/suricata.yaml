@@ -1,0 +1,38 @@
+%YAML 1.1
+---
+
+vars:
+  address-groups:
+    HOME_NET: "[172.16.0.0/12,192.168.0.0/16,10.0.0.0/8,127.0.0.1/32]"
+    EXTERNAL_NET: "!$HOME_NET"
+
+outputs:
+  - eve-log:
+      enabled: yes
+      filetype: redis
+      redis:
+        server: redis
+        port: 6379
+        mode: list
+        key: suricata_eve
+      types:
+        - alert:
+            payload: yes
+            payload-printable: yes
+            packet: yes
+            http-body: yes
+
+default-rule-path: /var/lib/suricata/rules
+
+rule-files:
+  - default.rules
+  - custom.rules
+
+af-packet:
+  - interface: lo
+    cluster-id: 99
+    cluster-type: cluster_flow
+    defrag: yes
+    tpacket-v3: yes
+    block-size: 131072
+    frame-size: 65536

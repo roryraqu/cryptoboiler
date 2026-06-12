@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: rgr-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: rgr
+    networks:
+      - rgr-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: rgr-backend
+    restart: unless-stopped
+    networks:
+      - rgr-network
+    depends_on:
+      - postgres
+
+  frontend:
+    build: ./frontend
+    container_name: rgr-frontend
+    ports:
+      - "7443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    networks:
+      - rgr-network
+
+networks:
+  rgr-network:
+    external: true
+
+volumes:
+  postgres_data:

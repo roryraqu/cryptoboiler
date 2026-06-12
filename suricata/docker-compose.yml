@@ -1,0 +1,41 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    networks:
+      - rgr-network
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  suricata:
+    image: jasonish/suricata:7.0.5
+    container_name: suricata
+    network_mode: "host"
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+      - SYS_NICE
+    volumes:
+      - ./suricata.yaml:/etc/suricata/suricata.yaml:rw
+      - ./rules/default.rules:/var/lib/suricata/rules/default.rules:rx
+      - ./rules/custom.rules:/var/lib/suricata/rules/custom.rules:rx
+      - ./logs:/var/log/suricata:rw
+    command: -c /etc/suricata/suricata.yaml --af-packet
+
+  rule-agent:
+    image: docker:cli
+    container_name: suricata_rule_agent
+    depends_on:
+      - redis
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./rules:/var/lib/suricata/rules:rw
+      - ./agent.sh:/app/agent.sh:ro
+    command: /bin/sh /app/agent.sh
+    restart: unless-stopped
+
+networks:
+  rgr-network:
+    external: true

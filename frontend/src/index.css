@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-page: #e6e8ec;
+    --bg-card: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --ant-color-success: #52c41a;
+    --ant-color-error: #ff4d4f;
+    --ant-color-primary: #1677ff;
+  }
+
+  body {
+    background-color: var(--bg-page);
+    color: var(--text-main);
+  }
+}
+
+@layer components {
+  .card {
+    background-color: var(--bg-card);
+    border-radius: 12px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s ease, box-shadow 0.25s ease, border-color 0.2s ease;
+  }
+
+  .card:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  }
+
+  .input, .select-toggle {
+    @apply w-full bg-white border border-slate-300 text-slate-800 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors;
+  }
+
+  .dropdown {
+    @apply absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg overflow-hidden;
+  }
+
+  .dropdown-item {
+    @apply px-4 py-2 cursor-pointer hover:bg-slate-50 text-slate-700 transition-colors;
+  }
+
+  .dropdown-item.active {
+    @apply bg-blue-50 text-blue-600 font-medium;
+  }
+}
+
+.online-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-inline-end: 5px;
+  vertical-align: middle;
+  background: var(--ant-color-success);
+  animation: online-blink 1.1s ease-in-out infinite;
+}
+
+@keyframes online-blink {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(82, 196, 26, 0.55); }
+  50% { opacity: 0.35; box-shadow: 0 0 0 4px rgba(82, 196, 26, 0); }
+}
