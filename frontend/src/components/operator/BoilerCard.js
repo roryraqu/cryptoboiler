@@ -84,4 +84,6 @@ const BoilerCard = memo(({ boiler, latest, chartData, isActive, isOffline, isCom
   );
 });
 
+BoilerCard.displayName = 'BoilerCard';
+
 export default BoilerCard;
