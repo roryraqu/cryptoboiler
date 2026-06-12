@@ -7,6 +7,7 @@ on:
     paths:
       - 'backend/**'
       - 'frontend/**'
+      - 'boiler/**'
 
 jobs:
   test:
@@ -45,4 +46,4 @@ jobs:
           script: |
             cd /home/roryraqu/cryptoboiler
             git pull origin master
-            docker compose up -d --build backend frontend
+            docker compose up -d --build backend frontend boiler-1 boiler-2 boiler-3

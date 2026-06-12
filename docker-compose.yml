@@ -26,8 +26,36 @@ services:
     container_name: rgr-frontend
     ports:
       - "7443:443"
-    volumes:
-      - /etc/letsencrypt:/etc/letsencrypt:ro
+    networks:
+      - rgr-network
+
+  boiler-1:
+    build: ./boiler
+    container_name: rgr-boiler-1
+    environment:
+      BACKEND_URL: http://backend:4000/api/telemetry
+      BOILER_ID: boiler-001
+      HMAC_SECRET: secret-key-001
+    networks:
+      - rgr-network
+
+  boiler-2:
+    build: ./boiler
+    container_name: rgr-boiler-2
+    environment:
+      BACKEND_URL: http://backend:4000/api/telemetry
+      BOILER_ID: boiler-002
+      HMAC_SECRET: secret-key-002
+    networks:
+      - rgr-network
+
+  boiler-3:
+    build: ./boiler
+    container_name: rgr-boiler-3
+    environment:
+      BACKEND_URL: http://backend:4000/api/telemetry
+      BOILER_ID: boiler-003
+      HMAC_SECRET: secret-key-003
     networks:
       - rgr-network
 
