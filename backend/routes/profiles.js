@@ -1,8 +1,24 @@
 const express = require('express');
 const { query } = require('../db');
 const { broadcast } = require('../sse');
+const ApiError = require('../utils/ApiError');
 const router = express.Router();
 
+/**
+ * @swagger
+ * /api/profiles:
+ * get:
+ * tags: [Profiles]
+ * responses:
+ * 200:
+ * description: Успешное выполнение
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.get('/', async (req, res, next) => {
   try {
     const { id } = req.query;
@@ -14,6 +30,27 @@ router.get('/', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+/**
+ * @swagger
+ * /api/profiles/{id}:
+ * put:
+ * tags: [Profiles]
+ * parameters:
+ * - in: path
+ * name: id
+ * required: true
+ * schema:
+ * type: string
+ * responses:
+ * 200:
+ * $ref: '#/components/responses/SuccessOK'
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.put('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -27,10 +64,10 @@ router.put('/:id', async (req, res, next) => {
     if (role !== undefined) { updates.push(`role = $${idx++}`); values.push(role); }
     if (is_deleted !== undefined) { updates.push(`is_deleted = $${idx++}`); values.push(is_deleted); }
 
-    if (!updates.length) return res.status(400).json({ error: 'Update fields required' });
+    if (!updates.length) throw ApiError.BadRequest('Update fields required');
     const result = await query(`UPDATE profiles SET ${updates.join(', ')} WHERE id = $${idx} RETURNING id, email, full_name, role, is_deleted`, [...values, id]);
     
-    if (!result.rows.length) return res.status(404).json({ error: 'Not found' });
+    if (!result.rows.length) throw ApiError.NotFound('Profile not found');
     broadcast('profile_change', result.rows[0]);
     res.json({ profiles: [result.rows[0]] });
   } catch (error) { next(error); }

@@ -2,8 +2,24 @@ const express = require('express');
 const { query } = require('../db');
 const { syncSuricataRules } = require('../services/suricataService');
 const { broadcast } = require('../sse');
+const ApiError = require('../utils/ApiError');
 const router = express.Router();
 
+/**
+ * @swagger
+ * /api/suricata/rules:
+ * get:
+ * tags: [Suricata]
+ * responses:
+ * 200:
+ * description: Успешное выполнение
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.get('/rules', async (req, res, next) => {
   try {
     const result = await query('SELECT * FROM suricata_rules ORDER BY sid ASC');
@@ -11,11 +27,26 @@ router.get('/rules', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+/**
+ * @swagger
+ * /api/suricata/rules:
+ * post:
+ * tags: [Suricata]
+ * responses:
+ * 201:
+ * $ref: '#/components/responses/SuccessCreated'
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.post('/rules', async (req, res, next) => {
   try {
     let { action, protocol, src_ip, src_port, dst_ip, dst_port, msg, sid } = req.body;
     if (!action || !protocol || !src_ip || !src_port || !dst_ip || !dst_port || !msg) {
-      return res.status(400).json({ error: 'All rule fields except sid are required' });
+      throw ApiError.BadRequest('All rule fields except sid are required');
     }
     if (!sid) {
       const maxSidResult = await query('SELECT MAX(sid) as max_sid FROM suricata_rules');
@@ -31,6 +62,27 @@ router.post('/rules', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+/**
+ * @swagger
+ * /api/suricata/rules/{id}:
+ * put:
+ * tags: [Suricata]
+ * parameters:
+ * - in: path
+ * name: id
+ * required: true
+ * schema:
+ * type: string
+ * responses:
+ * 200:
+ * $ref: '#/components/responses/SuccessOK'
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.put('/rules/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -49,9 +101,9 @@ router.put('/rules/:id', async (req, res, next) => {
     if (sid !== undefined) { updates.push(`sid = $${idx++}`); values.push(Number(sid)); }
     if (is_deleted !== undefined) { updates.push(`is_deleted = $${idx++}`); values.push(is_deleted); }
 
-    if (!updates.length) return res.status(400).json({ error: 'Update fields required' });
+    if (!updates.length) throw ApiError.BadRequest('Update fields required');
     const result = await query(`UPDATE suricata_rules SET ${updates.join(', ')} WHERE id = $${idx} RETURNING *`, [...values, id]);
-    if (!result.rows.length) return res.status(404).json({ error: 'Not found' });
+    if (!result.rows.length) throw ApiError.NotFound('Rule not found');
     
     await syncSuricataRules();
     broadcast('rule_change', result.rows[0]);
@@ -59,6 +111,21 @@ router.put('/rules/:id', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+/**
+ * @swagger
+ * /api/suricata/incidents:
+ * get:
+ * tags: [Suricata]
+ * responses:
+ * 200:
+ * description: Успешное выполнение
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.get('/incidents', async (req, res, next) => {
   try {
     const source = req.query.source;
@@ -68,16 +135,54 @@ router.get('/incidents', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+/**
+ * @swagger
+ * /api/suricata/incidents/{id}:
+ * put:
+ * tags: [Suricata]
+ * parameters:
+ * - in: path
+ * name: id
+ * required: true
+ * schema:
+ * type: string
+ * responses:
+ * 200:
+ * $ref: '#/components/responses/SuccessOK'
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.put('/incidents/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
+    if (!status) throw ApiError.BadRequest('Status is required');
     const result = await query('UPDATE incidents SET status = $1 WHERE id = $2 RETURNING *', [status, id]);
-    if (result.rows.length) broadcast('incident', result.rows[0]);
+    if (!result.rows.length) throw ApiError.NotFound('Incident not found');
+    broadcast('incident', result.rows[0]);
     res.json({ incident: result.rows[0] });
   } catch (error) { next(error); }
 });
 
+/**
+ * @swagger
+ * /api/suricata/audit-logs:
+ * get:
+ * tags: [Suricata]
+ * responses:
+ * 200:
+ * description: Успешное выполнение
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.get('/audit-logs', async (req, res, next) => {
   try {
     const result = await query(`SELECT a.*, p.email as user_email FROM audit_logs a LEFT JOIN profiles p ON a.user_id = p.id ORDER BY a.created_at DESC`);
@@ -85,9 +190,25 @@ router.get('/audit-logs', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+/**
+ * @swagger
+ * /api/suricata/audit-logs:
+ * post:
+ * tags: [Suricata]
+ * responses:
+ * 201:
+ * $ref: '#/components/responses/SuccessCreated'
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.post('/audit-logs', async (req, res, next) => {
   try {
     const { user_id, action, details } = req.body;
+    if (!action) throw ApiError.BadRequest('Action is required');
     const result = await query(`INSERT INTO audit_logs (user_id, action, details) VALUES ($1, $2, $3) RETURNING *`, [user_id || null, action, details || {}]);
     let userEmail = null;
     if (user_id) {

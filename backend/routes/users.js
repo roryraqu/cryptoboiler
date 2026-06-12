@@ -1,8 +1,24 @@
 const express = require('express');
 const { query } = require('../db');
+const ApiError = require('../utils/ApiError');
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /api/users:
+ * get:
+ * tags: [Users]
+ * responses:
+ * 200:
+ * description: Успешное выполнение
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.get('/', async (req, res, next) => {
   try {
     const { id } = req.query;
@@ -21,6 +37,27 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/users/{id}:
+ * put:
+ * tags: [Users]
+ * parameters:
+ * - in: path
+ * name: id
+ * required: true
+ * schema:
+ * type: string
+ * responses:
+ * 200:
+ * $ref: '#/components/responses/SuccessOK'
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.put('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -48,7 +85,7 @@ router.put('/:id', async (req, res, next) => {
     }
 
     if (!updates.length) {
-      return res.status(400).json({ error: 'At least one field is required to update' });
+      throw ApiError.BadRequest('At least one field is required to update');
     }
 
     const result = await query(
@@ -57,7 +94,7 @@ router.put('/:id', async (req, res, next) => {
     );
 
     if (!result.rows.length) {
-      return res.status(404).json({ error: 'User not found' });
+      throw ApiError.NotFound('User not found');
     }
 
     res.json({ users: [result.rows[0]] });

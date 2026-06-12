@@ -1,6 +1,7 @@
 const express = require('express');
 const { query } = require('../db');
 const { broadcast } = require('../sse');
+const ApiError = require('../utils/ApiError');
 
 const router = express.Router();
 
@@ -20,9 +21,7 @@ setInterval(async () => {
             const data = await res.json();
             currentStatus = data.status || 'offline';
           }
-        } catch (error) {
-          console.error('Таймаут при опросе котла:', error.message);
-        }
+        } catch (error) {}
       }
       
       if (lastStatuses[b.id] !== currentStatus) {
@@ -30,11 +29,24 @@ setInterval(async () => {
         broadcast('status', { id: b.id, status: currentStatus });
       }
     }
-  } catch (e) {
-    console.error('Ошибка при поллинге статусов:', e);
-  }
+  } catch (e) {}
 }, 3000);
 
+/**
+ * @swagger
+ * /api/boilers:
+ * get:
+ * tags: [Boilers]
+ * responses:
+ * 200:
+ * description: Успешное выполнение
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.get('/', async (req, res, next) => {
   try {
     const { id, is_deleted } = req.query;
@@ -51,10 +63,40 @@ router.get('/', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+/**
+ * @swagger
+ * /api/boilers/statuses/all:
+ * get:
+ * tags: [Boilers]
+ * responses:
+ * 200:
+ * description: Успешное выполнение
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.get('/statuses/all', (req, res) => {
   res.json({ statuses: lastStatuses });
 });
 
+/**
+ * @swagger
+ * /api/boilers:
+ * post:
+ * tags: [Boilers]
+ * responses:
+ * 201:
+ * $ref: '#/components/responses/SuccessCreated'
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.post('/', async (req, res, next) => {
   try {
     const { id, name, hmac_secret, ip_address, port } = req.body;
@@ -68,13 +110,36 @@ router.post('/', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+/**
+ * @swagger
+ * /api/boilers/{id}/status:
+ * post:
+ * tags: [Boilers]
+ * parameters:
+ * - in: path
+ * name: id
+ * required: true
+ * schema:
+ * type: string
+ * responses:
+ * 200:
+ * $ref: '#/components/responses/SuccessOK'
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 502:
+ * $ref: '#/components/responses/BadGateway'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.post('/:id/status', async (req, res, next) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
     
     const result = await query('SELECT ip_address, port FROM boilers WHERE id = $1', [id]);
-    if (!result.rows.length) return res.status(404).json({ error: 'Котел не найден' });
+    if (!result.rows.length) throw ApiError.NotFound('Котел не найден');
     
     const { ip_address, port } = result.rows[0];
     const controller = new AbortController();
@@ -88,18 +153,39 @@ router.post('/:id/status', async (req, res, next) => {
         signal: controller.signal
       });
       clearTimeout(timeoutId);
-      if (!response.ok) throw new Error('Некорректный ответ от устройства');
+      if (!response.ok) throw ApiError.BadGateway('Некорректный ответ от устройства');
       
       lastStatuses[id] = status;
       broadcast('status', { id, status });
       res.json({ success: true, status });
     } catch {
       clearTimeout(timeoutId);
-      res.status(502).json({ error: 'Котел недоступен' });
+      throw ApiError.BadGateway('Котел недоступен');
     }
   } catch (error) { next(error); }
 });
 
+/**
+ * @swagger
+ * /api/boilers/{id}:
+ * put:
+ * tags: [Boilers]
+ * parameters:
+ * - in: path
+ * name: id
+ * required: true
+ * schema:
+ * type: string
+ * responses:
+ * 200:
+ * $ref: '#/components/responses/SuccessOK'
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.put('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -124,6 +210,27 @@ router.put('/:id', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+/**
+ * @swagger
+ * /api/boilers/{id}:
+ * delete:
+ * tags: [Boilers]
+ * parameters:
+ * - in: path
+ * name: id
+ * required: true
+ * schema:
+ * type: string
+ * responses:
+ * 200:
+ * $ref: '#/components/responses/SuccessOK'
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.delete('/:id', async (req, res, next) => {
   try {
     const result = await query('UPDATE boilers SET is_deleted = true WHERE id = $1 RETURNING *', [req.params.id]);

@@ -9,10 +9,11 @@ const {
 } = require('@simplewebauthn/server');
 const { query } = require('../db');
 const authService = require('../services/authService');
+const ApiError = require('../utils/ApiError');
 
 function requireEnv(name) {
   const value = process.env[name];
-  if (!value) throw new Error(`Missing required environment variable: ${name}`);
+  if (!value) throw ApiError.Internal(`Missing required environment variable: ${name}`);
   return value;
 }
 
@@ -25,7 +26,7 @@ const COOKIE_NAME = requireEnv('COOKIE_NAME');
 
 function authMiddleware(req, res, next) {
   const token = req.cookies?.[COOKIE_NAME] || (req.headers.authorization || '').split(' ')[1];
-  if (!token) return res.status(401).json({ error: 'Unauthorized' });
+  if (!token) throw ApiError.Unauthorized('Unauthorized');
 
   try {
     const payload = authService.verifyToken(token);
@@ -37,18 +38,33 @@ function authMiddleware(req, res, next) {
     };
     next();
   } catch {
-    return res.status(401).json({ error: 'Token verification failed' });
+    throw ApiError.Unauthorized('Token verification failed');
   }
 }
 
+/**
+ * @swagger
+ * /api/auth/register:
+ * post:
+ * tags: [Auth]
+ * responses:
+ * 201:
+ * $ref: '#/components/responses/SuccessCreated'
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.post('/register', async (req, res, next) => {
   try {
     const { email, password, fullName, agreedToTerms } = req.body;
-    if (!email || !password || !fullName) return res.status(400).json({ error: 'Email, password and full name are required' });
-    if (!agreedToTerms) return res.status(400).json({ error: 'Terms agreement is required' });
+    if (!email || !password || !fullName) throw ApiError.BadRequest('Email, password and full name are required');
+    if (!agreedToTerms) throw ApiError.BadRequest('Terms agreement is required');
 
     const existingUser = await authService.findUserByEmail(email);
-    if (existingUser) return res.status(400).json({ error: 'User with this email already exists' });
+    if (existingUser) throw ApiError.BadRequest('User with this email already exists');
 
     const id = crypto.randomUUID();
     const passwordHash = await bcrypt.hash(password, 10);
@@ -61,18 +77,35 @@ router.post('/register', async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/auth/login:
+ * post:
+ * tags: [Auth]
+ * responses:
+ * 200:
+ * $ref: '#/components/responses/SuccessOK'
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 403:
+ * $ref: '#/components/responses/Forbidden'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.post('/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) return res.status(400).json({ error: 'Email and password are required' });
+    if (!email || !password) throw ApiError.BadRequest('Email and password are required');
 
     const user = await authService.findUserByEmail(email);
-    if (!user) return res.status(400).json({ error: 'Неверный email или пароль' });
+    if (!user) throw ApiError.BadRequest('Неверный email или пароль');
 
     const validPassword = await authService.verifyPassword(password, user.password_hash);
-    if (!validPassword) return res.status(400).json({ error: 'Неверный email или пароль' });
+    if (!validPassword) throw ApiError.BadRequest('Неверный email или пароль');
 
-    if (user.role === 'pending') return res.status(403).json({ error: 'Аккаунт ожидает проверки администратора' });
+    if (user.role === 'pending') throw ApiError.Forbidden('Аккаунт ожидает проверки администратора');
 
     const accessToken = authService.createToken(user);
     res.cookie(COOKIE_NAME, accessToken, {
@@ -89,19 +122,58 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/auth/logout:
+ * post:
+ * tags: [Auth]
+ * responses:
+ * 200:
+ * $ref: '#/components/responses/SuccessOK'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.post('/logout', (req, res) => {
   res.clearCookie(COOKIE_NAME, { path: '/' });
   res.json({ success: true });
 });
 
+/**
+ * @swagger
+ * /api/auth/me:
+ * get:
+ * tags: [Auth]
+ * responses:
+ * 200:
+ * $ref: '#/components/responses/SuccessOK'
+ * 401:
+ * $ref: '#/components/responses/Unauthorized'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.get('/me', authMiddleware, (req, res) => {
   res.json({ user: req.user });
 });
 
+/**
+ * @swagger
+ * /api/auth/biometrics:
+ * get:
+ * tags: [Auth]
+ * responses:
+ * 200:
+ * $ref: '#/components/responses/SuccessOK'
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.get('/biometrics', async (req, res, next) => {
   try {
     const email = req.query.email || req.query.user_email;
-    if (!email) return res.status(400).json({ error: 'Email query param is required' });
+    if (!email) throw ApiError.BadRequest('Email query param is required');
 
     const result = await query('SELECT * FROM user_authenticators WHERE lower(user_email) = lower($1)', [email]);
     res.json({ authenticators: result.rows });
@@ -110,11 +182,26 @@ router.get('/biometrics', async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/auth/biometrics:
+ * delete:
+ * tags: [Auth]
+ * responses:
+ * 200:
+ * $ref: '#/components/responses/SuccessOK'
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.delete('/biometrics', async (req, res, next) => {
   try {
     const email = req.query.email || req.query.user_email;
     const credentialId = req.query.credential_id;
-    if (!email && !credentialId) return res.status(400).json({ error: 'Email or credential_id query param is required' });
+    if (!email && !credentialId) throw ApiError.BadRequest('Email or credential_id query param is required');
 
     const condition = email ? 'lower(user_email) = lower($1)' : 'credential_id = $1';
     const value = email || credentialId;
@@ -125,13 +212,28 @@ router.delete('/biometrics', async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/auth/webauthn/register/generate:
+ * post:
+ * tags: [Auth WebAuthn]
+ * responses:
+ * 200:
+ * $ref: '#/components/responses/SuccessOK'
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.post('/webauthn/register/generate', async (req, res, next) => {
   try {
     const { email } = req.body;
-    if (!email) return res.status(400).json({ error: 'Email required' });
+    if (!email) throw ApiError.BadRequest('Email required');
 
     const user = await authService.findUserByEmail(email);
-    if (!user) return res.status(404).json({ error: 'User not found' });
+    if (!user) throw ApiError.NotFound('User not found');
 
     const existingAuthenticators = await authService.findAuthenticators(email);
 
@@ -155,13 +257,28 @@ router.post('/webauthn/register/generate', async (req, res, next) => {
   }
 });
 
-router.post('/webauthn/register/verify', async (req, res) => {
+/**
+ * @swagger
+ * /api/auth/webauthn/register/verify:
+ * post:
+ * tags: [Auth WebAuthn]
+ * responses:
+ * 200:
+ * $ref: '#/components/responses/SuccessOK'
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
+router.post('/webauthn/register/verify', async (req, res, next) => {
   try {
     const { email, body } = req.body;
-    if (!email || !body) return res.status(400).json({ error: 'Email and response body are required' });
+    if (!email || !body) throw ApiError.BadRequest('Email and response body are required');
 
     const expectedChallenge = challengesStore[email];
-    if (!expectedChallenge) return res.status(400).json({ error: 'No registration challenge found' });
+    if (!expectedChallenge) throw ApiError.BadRequest('No registration challenge found');
 
     const verification = await verifyRegistrationResponse({
       response: body,
@@ -182,19 +299,34 @@ router.post('/webauthn/register/verify', async (req, res) => {
       return res.json({ verified: true });
     }
 
-    res.status(400).json({ error: 'Verification failed' });
+    throw ApiError.BadRequest('Verification failed');
   } catch (error) {
-    return res.status(400).json({ error: error.message || 'Verification failed' });
+    next(error);
   }
 });
 
+/**
+ * @swagger
+ * /api/auth/webauthn/login/generate:
+ * post:
+ * tags: [Auth WebAuthn]
+ * responses:
+ * 200:
+ * $ref: '#/components/responses/SuccessOK'
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.post('/webauthn/login/generate', async (req, res, next) => {
   try {
     const { email } = req.body;
-    if (!email) return res.status(400).json({ error: 'Email required' });
+    if (!email) throw ApiError.BadRequest('Email required');
 
     const authenticators = await authService.findAuthenticators(email);
-    if (!authenticators || authenticators.length === 0) return res.status(404).json({ error: 'No biometric device found for this email' });
+    if (!authenticators || authenticators.length === 0) throw ApiError.NotFound('No biometric device found for this email');
 
     const options = await generateAuthenticationOptions({
       rpID,
@@ -212,16 +344,33 @@ router.post('/webauthn/login/generate', async (req, res, next) => {
   }
 });
 
-router.post('/webauthn/login/verify', async (req, res) => {
+/**
+ * @swagger
+ * /api/auth/webauthn/login/verify:
+ * post:
+ * tags: [Auth WebAuthn]
+ * responses:
+ * 200:
+ * $ref: '#/components/responses/SuccessOK'
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 403:
+ * $ref: '#/components/responses/Forbidden'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
+router.post('/webauthn/login/verify', async (req, res, next) => {
   try {
     const { email, body } = req.body;
-    if (!email || !body) return res.status(400).json({ error: 'Email and response body are required' });
+    if (!email || !body) throw ApiError.BadRequest('Email and response body are required');
 
     const expectedChallenge = challengesStore[email];
-    if (!expectedChallenge) return res.status(400).json({ error: 'No authentication challenge found' });
+    if (!expectedChallenge) throw ApiError.BadRequest('No authentication challenge found');
 
     const authenticator = await authService.findAuthenticatorById(body.id);
-    if (!authenticator) return res.status(400).json({ error: 'Authenticator not found' });
+    if (!authenticator) throw ApiError.BadRequest('Authenticator not found');
 
     const verification = await verifyAuthenticationResponse({
       response: body,
@@ -242,7 +391,7 @@ router.post('/webauthn/login/verify', async (req, res) => {
         [verification.authenticationInfo.newCounter, authenticator.credential_id]
       );
       const user = await authService.findUserByEmail(email);
-      if (!user) return res.status(404).json({ error: 'User not found' });
+      if (!user) throw ApiError.NotFound('User not found');
 
       const accessToken = authService.createToken(user);
       res.cookie(COOKIE_NAME, accessToken, {
@@ -261,9 +410,9 @@ router.post('/webauthn/login/verify', async (req, res) => {
       });
     }
 
-    res.status(400).json({ error: 'Verification failed' });
+    throw ApiError.BadRequest('Verification failed');
   } catch (error) {
-    return res.status(400).json({ error: error.message || 'Verification failed' });
+    next(error);
   }
 });
 

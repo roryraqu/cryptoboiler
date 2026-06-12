@@ -2,9 +2,25 @@ const express = require('express');
 const crypto = require('crypto');
 const { query } = require('../db');
 const { broadcast } = require('../sse');
+const ApiError = require('../utils/ApiError');
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /api/telemetry:
+ * get:
+ * tags: [Telemetry]
+ * responses:
+ * 200:
+ * description: Успешное выполнение
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.get('/', async (req, res, next) => {
   try {
     const { boiler_id, limit } = req.query;
@@ -30,15 +46,30 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/telemetry:
+ * post:
+ * tags: [Telemetry]
+ * responses:
+ * 201:
+ * $ref: '#/components/responses/SuccessCreated'
+ * 400:
+ * $ref: '#/components/responses/BadRequest'
+ * 404:
+ * $ref: '#/components/responses/NotFound'
+ * 500:
+ * $ref: '#/components/responses/InternalServerError'
+ */
 router.post('/', async (req, res, next) => {
   try {
     const { boiler_id, temperature, pressure, timestamp, hmac_signature } = req.body;
     if (!boiler_id || temperature == null || pressure == null || !timestamp || !hmac_signature) {
-      return res.status(400).json({ error: 'Missing required fields' });
+      throw ApiError.BadRequest('Missing required fields');
     }
 
     const boilerResult = await query('SELECT hmac_secret FROM boilers WHERE id = $1 AND is_deleted = false', [boiler_id]);
-    if (!boilerResult.rows.length) return res.status(404).json({ error: 'Boiler not found' });
+    if (!boilerResult.rows.length) throw ApiError.NotFound('Boiler not found');
 
     const secret = boilerResult.rows[0].hmac_secret;
     const payloadStr = `${boiler_id}|${Number(temperature).toFixed(2)}|${Number(pressure).toFixed(2)}|${timestamp}`;
