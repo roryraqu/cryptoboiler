@@ -20,11 +20,13 @@
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.11.0",
     "redis": "^6.0.0",
+    "swagger-ui-express": "^5.0.1",
     "tail": "^2.2.6"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.4.1",
-    "globals": "^17.6.0"
+    "globals": "^17.6.0",
+    "swagger-autogen": "^2.23.7"
   }
 }
