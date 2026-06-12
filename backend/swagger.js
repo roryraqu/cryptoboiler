@@ -10,12 +10,8 @@ const doc = {
   },
   servers: [
     {
-      url: 'https://cryptoboiler.duckdns.org',
+      url: 'https://cryptoboiler.duckdns.org:7443',
       description: 'Production'
-    },
-    {
-      url: `http://localhost:${process.env.PORT || 4000}`,
-      description: 'Local'
     }
   ],
   components: {
