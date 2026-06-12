@@ -72,7 +72,7 @@ export default function AdminGate() {
             <Input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required />
           )}
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? 'Верификация...' : isBiometric ? 'Войти по биометрии' : 'Авторизоваться'}
+            {isLoading ? 'Верификация...' : isBiometric ? 'Войти по ключу доступа' : 'Авторизоваться'}
           </Button>
         </form>
         

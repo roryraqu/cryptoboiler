@@ -25,11 +25,11 @@ export default function Profile({ onBack }) {
   }, [user]);
 
   const handleDisconnect = async () => {
-    if (!window.confirm('Отключить вход по биометрии для этого устройства?')) return;
+    if (!window.confirm('Отвязать ключ доступа для этого устройства?')) return;
     const { error } = await api.from('user_authenticators').delete().eq('user_email', user.email);
     if (!error) {
       setHasBiometrics(false);
-      alert('Биометрия успешно отключена');
+      alert('Ключ доступа успешно отвязан');
     }
   };
 
@@ -52,13 +52,13 @@ export default function Profile({ onBack }) {
         </div>
       </div>
       <div className="border-t border-slate-200 pt-6 space-y-4">
-        <h3 className="text-sm font-bold text-slate-800">Безопасность и биометрия</h3>
+        <h3 className="text-sm font-bold text-slate-800">Безопасность и ключи доступа</h3>
         <p className="text-xs text-slate-600 leading-relaxed">
           Настройте беспарольный доступ в систему с помощью технологии Passkeys. Вы сможете мгновенно авторизоваться, используя встроенный сканер отпечатков пальцев, распознавание лица Face ID или PIN-код вашего устройства.
         </p>
         {hasBiometrics ? (
           <Button variant="danger" className="w-full py-2.5 font-semibold" onClick={handleDisconnect}>
-            Отключить биометрию (Passkey)
+            Отвязать ключ доступа
           </Button>
         ) : (
           <Button variant="secondary" className="w-full py-2.5 font-semibold" onClick={async () => {
@@ -66,7 +66,7 @@ export default function Profile({ onBack }) {
             const { data } = await api.from('user_authenticators').select('id').eq('user_email', user.email);
             if (data && data.length > 0) setHasBiometrics(true);
           }}>
-            Подключить биометрию (Passkey)
+            Настроить ключ доступа
           </Button>
         )}
       </div>

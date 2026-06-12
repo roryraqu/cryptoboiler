@@ -78,7 +78,7 @@ export default function Login() {
             <Input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required />
           )}
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? 'Проверка...' : isBiometric ? 'Войти по биометрии' : 'Авторизоваться'}
+            {isLoading ? 'Проверка...' : isBiometric ? 'Войти по ключу доступа' : 'Авторизоваться'}
           </Button>
         </form>
         
