@@ -33,6 +33,14 @@ const doc = {
         description: 'Необходима аутентификация (Код 401)',
         content: { 'application/json': { schema: { type: 'object', properties: { error: { type: 'string', example: 'Необходима аутентификация' } } } } }
       },
+      TooManyRequests: {
+        description: 'Превышен лимит запросов (Код 429)',
+        content: { 'application/json': { schema: { type: 'object', properties: { error: { type: 'string', example: 'Превышен лимит запросов' } } } } }
+      },
+      ServiceUnavailable: {
+        description: 'Сервер временно недоступен (Код 503)',
+        content: { 'application/json': { schema: { type: 'object', properties: { error: { type: 'string', example: 'Сервер на обслуживании' } } } } }
+      },
       Forbidden: {
         description: 'Доступ запрещен (Код 403)',
         content: { 'application/json': { schema: { type: 'object', properties: { error: { type: 'string', example: 'Доступ запрещен' } } } } }
