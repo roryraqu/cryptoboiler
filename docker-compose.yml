@@ -36,4 +36,6 @@ networks:
     external: true
 
 volumes:
-  postgres_data:
+  pgdata:
+    external: true
+    name: roryraqu_postgres_data
