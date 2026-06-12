@@ -113,11 +113,11 @@ export default function Register() {
         {message.text && <div className={`mb-6 px-4 py-3 rounded-lg text-sm text-center border ${message.type === 'error' ? 'bg-red-50 border-red-200 text-red-600' : 'bg-emerald-50 border-emerald-200 text-emerald-600'}`}>{message.text}</div>}
         
         <form onSubmit={handleRegister} className="space-y-4">
-          <Input type="text" value={fullName} onChange={e => setFullName(e.target.value)} placeholder="ФИО полностью" required />
+          <Input type="text" value={fullName} onChange={e => setFullName(e.target.value)} placeholder="ФИО" required />
           <Input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Рабочая почта" required />
           
           <div className="pt-2">
-            <Input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Создайте пароль" required />
+            <Input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Придумайте пароль" required />
             <div className="flex gap-1 h-1.5 mt-2 mb-1">
               {[1, 2, 3, 4, 5].map(lvl => (
                 <div key={lvl} className={`flex-1 rounded-full transition-colors ${getBarColor(lvl)}`} />
