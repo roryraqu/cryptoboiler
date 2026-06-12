@@ -45,20 +45,40 @@ router.post('/', async (req, res, next) => {
     const expectedSignature = crypto.createHmac('sha256', secret).update(payloadStr).digest('hex');
     const isHmacValid = expectedSignature === hmac_signature;
 
-    const saved = await query(
-      `INSERT INTO telemetry (boiler_id, temperature, pressure, timestamp, hmac_signature, is_hmac_valid)
-       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [boiler_id, Number(temperature), Number(pressure), new Date(timestamp), hmac_signature, isHmacValid]
-    );
+    const telemetryData = {
+      boiler_id,
+      temperature: Number(temperature),
+      pressure: Number(pressure),
+      timestamp: new Date(timestamp).toISOString(),
+      hmac_signature,
+      is_hmac_valid: isHmacValid
+    };
 
-    broadcast('telemetry', saved.rows[0]);
+    broadcast('telemetry', telemetryData);
 
     if (!isHmacValid) {
-      const inc = await query(
-        `INSERT INTO incidents (source, boiler_id, severity, description, status) VALUES ($1, $2, $3, $4, 'open') RETURNING *`,
+      const incData = {
+        source: 'hmac_mismatch',
+        boiler_id,
+        severity: 'critical',
+        description: `HMAC validation failed for boiler ${boiler_id}`,
+        status: 'open',
+        created_at: new Date().toISOString()
+      };
+      broadcast('incident', incData);
+    }
+
+    query(
+      `INSERT INTO telemetry (boiler_id, temperature, pressure, timestamp, hmac_signature, is_hmac_valid)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [boiler_id, Number(temperature), Number(pressure), new Date(timestamp), hmac_signature, isHmacValid]
+    ).catch(() => {});
+
+    if (!isHmacValid) {
+      query(
+        `INSERT INTO incidents (source, boiler_id, severity, description, status) VALUES ($1, $2, $3, $4, 'open')`,
         ['hmac_mismatch', boiler_id, 'critical', `HMAC validation failed for boiler ${boiler_id}`]
-      );
-      broadcast('incident', inc.rows[0]);
+      ).catch(() => {});
     }
 
     res.json({ success: true, valid: isHmacValid });

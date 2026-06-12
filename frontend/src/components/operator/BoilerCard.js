@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { Card } from '../ui/Card';
 
-export default function BoilerCard({ boiler, latest, chartData, isActive, isOffline, isCompromised, onIntervalChange, currentInterval, onSelect, selected }) {
+const BoilerCard = memo(({ boiler, latest, chartData, isActive, isOffline, isCompromised, onIntervalChange, currentInterval, onSelect, selected }) => {
   const [metric, setMetric] = useState('temp');
   const isStopped = !isOffline && !isActive;
 
@@ -72,4 +72,16 @@ export default function BoilerCard({ boiler, latest, chartData, isActive, isOffl
       ) : <div className="py-8 text-center text-slate-500 text-xs">Ожидание данных...</div>)}
     </Card>
   );
-}
+}, (prevProps, nextProps) => {
+  return (
+    prevProps.isActive === nextProps.isActive &&
+    prevProps.isOffline === nextProps.isOffline &&
+    prevProps.isCompromised === nextProps.isCompromised &&
+    prevProps.currentInterval === nextProps.currentInterval &&
+    prevProps.selected === nextProps.selected &&
+    JSON.stringify(prevProps.latest) === JSON.stringify(nextProps.latest) &&
+    JSON.stringify(prevProps.chartData) === JSON.stringify(nextProps.chartData)
+  );
+});
+
+export default BoilerCard;
