@@ -42,22 +42,15 @@ function authMiddleware(req, res, next) {
   }
 }
 
-/**
- * @swagger
- * /api/auth/register:
- * post:
- * tags: [Auth]
- * responses:
- * 201:
- * $ref: '#/components/responses/SuccessCreated'
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.post('/register', async (req, res, next) => {
+  // #swagger.tags = ['Auth']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const { email, password, fullName, agreedToTerms } = req.body;
     if (!email || !password || !fullName) throw ApiError.BadRequest('Email, password and full name are required');
@@ -77,24 +70,15 @@ router.post('/register', async (req, res, next) => {
   }
 });
 
-/**
- * @swagger
- * /api/auth/login:
- * post:
- * tags: [Auth]
- * responses:
- * 200:
- * $ref: '#/components/responses/SuccessOK'
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 403:
- * $ref: '#/components/responses/Forbidden'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.post('/login', async (req, res, next) => {
+  // #swagger.tags = ['Auth']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const { email, password } = req.body;
     if (!email || !password) throw ApiError.BadRequest('Email and password are required');
@@ -122,55 +106,40 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
-/**
- * @swagger
- * /api/auth/logout:
- * post:
- * tags: [Auth]
- * responses:
- * 200:
- * $ref: '#/components/responses/SuccessOK'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.post('/logout', (req, res) => {
+  // #swagger.tags = ['Auth']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   res.clearCookie(COOKIE_NAME, { path: '/' });
   res.json({ success: true });
 });
 
-/**
- * @swagger
- * /api/auth/me:
- * get:
- * tags: [Auth]
- * responses:
- * 200:
- * $ref: '#/components/responses/SuccessOK'
- * 401:
- * $ref: '#/components/responses/Unauthorized'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.get('/me', authMiddleware, (req, res) => {
+  // #swagger.tags = ['Auth']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   res.json({ user: req.user });
 });
 
-/**
- * @swagger
- * /api/auth/biometrics:
- * get:
- * tags: [Auth]
- * responses:
- * 200:
- * $ref: '#/components/responses/SuccessOK'
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.get('/biometrics', async (req, res, next) => {
+  // #swagger.tags = ['Auth']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const email = req.query.email || req.query.user_email;
     if (!email) throw ApiError.BadRequest('Email query param is required');
@@ -182,22 +151,15 @@ router.get('/biometrics', async (req, res, next) => {
   }
 });
 
-/**
- * @swagger
- * /api/auth/biometrics:
- * delete:
- * tags: [Auth]
- * responses:
- * 200:
- * $ref: '#/components/responses/SuccessOK'
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.delete('/biometrics', async (req, res, next) => {
+  // #swagger.tags = ['Auth']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const email = req.query.email || req.query.user_email;
     const credentialId = req.query.credential_id;
@@ -212,22 +174,15 @@ router.delete('/biometrics', async (req, res, next) => {
   }
 });
 
-/**
- * @swagger
- * /api/auth/webauthn/register/generate:
- * post:
- * tags: [Auth WebAuthn]
- * responses:
- * 200:
- * $ref: '#/components/responses/SuccessOK'
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.post('/webauthn/register/generate', async (req, res, next) => {
+  // #swagger.tags = ['Auth WebAuthn']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const { email } = req.body;
     if (!email) throw ApiError.BadRequest('Email required');
@@ -257,22 +212,15 @@ router.post('/webauthn/register/generate', async (req, res, next) => {
   }
 });
 
-/**
- * @swagger
- * /api/auth/webauthn/register/verify:
- * post:
- * tags: [Auth WebAuthn]
- * responses:
- * 200:
- * $ref: '#/components/responses/SuccessOK'
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.post('/webauthn/register/verify', async (req, res, next) => {
+  // #swagger.tags = ['Auth WebAuthn']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const { email, body } = req.body;
     if (!email || !body) throw ApiError.BadRequest('Email and response body are required');
@@ -305,22 +253,15 @@ router.post('/webauthn/register/verify', async (req, res, next) => {
   }
 });
 
-/**
- * @swagger
- * /api/auth/webauthn/login/generate:
- * post:
- * tags: [Auth WebAuthn]
- * responses:
- * 200:
- * $ref: '#/components/responses/SuccessOK'
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.post('/webauthn/login/generate', async (req, res, next) => {
+  // #swagger.tags = ['Auth WebAuthn']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const { email } = req.body;
     if (!email) throw ApiError.BadRequest('Email required');
@@ -344,24 +285,15 @@ router.post('/webauthn/login/generate', async (req, res, next) => {
   }
 });
 
-/**
- * @swagger
- * /api/auth/webauthn/login/verify:
- * post:
- * tags: [Auth WebAuthn]
- * responses:
- * 200:
- * $ref: '#/components/responses/SuccessOK'
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 403:
- * $ref: '#/components/responses/Forbidden'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.post('/webauthn/login/verify', async (req, res, next) => {
+  // #swagger.tags = ['Auth WebAuthn']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const { email, body } = req.body;
     if (!email || !body) throw ApiError.BadRequest('Email and response body are required');

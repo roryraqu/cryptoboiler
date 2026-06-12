@@ -6,22 +6,15 @@ const ApiError = require('../utils/ApiError');
 
 const router = express.Router();
 
-/**
- * @swagger
- * /api/telemetry:
- * get:
- * tags: [Telemetry]
- * responses:
- * 200:
- * description: Успешное выполнение
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.get('/', async (req, res, next) => {
+  // #swagger.tags = ['Telemetry']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const { boiler_id, limit } = req.query;
     let sql = 'SELECT * FROM telemetry';
@@ -46,22 +39,15 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-/**
- * @swagger
- * /api/telemetry:
- * post:
- * tags: [Telemetry]
- * responses:
- * 201:
- * $ref: '#/components/responses/SuccessCreated'
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.post('/', async (req, res, next) => {
+  // #swagger.tags = ['Telemetry']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const { boiler_id, temperature, pressure, timestamp, hmac_signature } = req.body;
     if (!boiler_id || temperature == null || pressure == null || !timestamp || !hmac_signature) {

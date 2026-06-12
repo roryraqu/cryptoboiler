@@ -4,22 +4,15 @@ const ApiError = require('../utils/ApiError');
 
 const router = express.Router();
 
-/**
- * @swagger
- * /api/users:
- * get:
- * tags: [Users]
- * responses:
- * 200:
- * description: Успешное выполнение
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.get('/', async (req, res, next) => {
+  // #swagger.tags = ['Users']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const { id } = req.query;
     let sql = 'SELECT id, email, full_name, role, is_deleted FROM users';
@@ -37,28 +30,15 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-/**
- * @swagger
- * /api/users/{id}:
- * put:
- * tags: [Users]
- * parameters:
- * - in: path
- * name: id
- * required: true
- * schema:
- * type: string
- * responses:
- * 200:
- * $ref: '#/components/responses/SuccessOK'
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.put('/:id', async (req, res, next) => {
+  // #swagger.tags = ['Users']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const { id } = req.params;
     const { full_name, email, role, is_deleted } = req.body;

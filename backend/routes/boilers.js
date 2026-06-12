@@ -32,22 +32,15 @@ setInterval(async () => {
   } catch (e) {}
 }, 3000);
 
-/**
- * @swagger
- * /api/boilers:
- * get:
- * tags: [Boilers]
- * responses:
- * 200:
- * description: Успешное выполнение
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.get('/', async (req, res, next) => {
+  // #swagger.tags = ['Boilers']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const { id, is_deleted } = req.query;
     const conditions = [];
@@ -63,41 +56,27 @@ router.get('/', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-/**
- * @swagger
- * /api/boilers/statuses/all:
- * get:
- * tags: [Boilers]
- * responses:
- * 200:
- * description: Успешное выполнение
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.get('/statuses/all', (req, res) => {
+  // #swagger.tags = ['Boilers']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   res.json({ statuses: lastStatuses });
 });
 
-/**
- * @swagger
- * /api/boilers:
- * post:
- * tags: [Boilers]
- * responses:
- * 201:
- * $ref: '#/components/responses/SuccessCreated'
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.post('/', async (req, res, next) => {
+  // #swagger.tags = ['Boilers']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const { id, name, hmac_secret, ip_address, port } = req.body;
     const result = await query(
@@ -110,30 +89,15 @@ router.post('/', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-/**
- * @swagger
- * /api/boilers/{id}/status:
- * post:
- * tags: [Boilers]
- * parameters:
- * - in: path
- * name: id
- * required: true
- * schema:
- * type: string
- * responses:
- * 200:
- * $ref: '#/components/responses/SuccessOK'
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 502:
- * $ref: '#/components/responses/BadGateway'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.post('/:id/status', async (req, res, next) => {
+  // #swagger.tags = ['Boilers']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const { id } = req.params;
     const { status } = req.body;
@@ -165,28 +129,15 @@ router.post('/:id/status', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-/**
- * @swagger
- * /api/boilers/{id}:
- * put:
- * tags: [Boilers]
- * parameters:
- * - in: path
- * name: id
- * required: true
- * schema:
- * type: string
- * responses:
- * 200:
- * $ref: '#/components/responses/SuccessOK'
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.put('/:id', async (req, res, next) => {
+  // #swagger.tags = ['Boilers']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const { id } = req.params;
     const { name, hmac_secret, ip_address, port, is_deleted } = req.body;
@@ -210,28 +161,15 @@ router.put('/:id', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-/**
- * @swagger
- * /api/boilers/{id}:
- * delete:
- * tags: [Boilers]
- * parameters:
- * - in: path
- * name: id
- * required: true
- * schema:
- * type: string
- * responses:
- * 200:
- * $ref: '#/components/responses/SuccessOK'
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.delete('/:id', async (req, res, next) => {
+  // #swagger.tags = ['Boilers']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const result = await query('UPDATE boilers SET is_deleted = true WHERE id = $1 RETURNING *', [req.params.id]);
     if (result.rows.length) {

@@ -21,6 +21,34 @@ const doc = {
         in: 'cookie',
         name: process.env.COOKIE_NAME || 'access_token'
       }
+    },
+    responses: {
+      SuccessOK: { description: 'Успешное выполнение (Код 200)' },
+      SuccessCreated: { description: 'Успешно создано (Код 201)' },
+      BadRequest: {
+        description: 'Неверный синтаксис или ошибка валидации (Код 400)',
+        content: { 'application/json': { schema: { type: 'object', properties: { error: { type: 'string', example: 'Сервер не понял запрос' } } } } }
+      },
+      Unauthorized: {
+        description: 'Необходима аутентификация (Код 401)',
+        content: { 'application/json': { schema: { type: 'object', properties: { error: { type: 'string', example: 'Необходима аутентификация' } } } } }
+      },
+      Forbidden: {
+        description: 'Доступ запрещен (Код 403)',
+        content: { 'application/json': { schema: { type: 'object', properties: { error: { type: 'string', example: 'Доступ запрещен' } } } } }
+      },
+      NotFound: {
+        description: 'Запрашиваемый ресурс не найден (Код 404)',
+        content: { 'application/json': { schema: { type: 'object', properties: { error: { type: 'string', example: 'Ресурс не найден' } } } } }
+      },
+      BadGateway: {
+        description: 'Шлюз получил некорректный ответ от устройства (Код 502)',
+        content: { 'application/json': { schema: { type: 'object', properties: { error: { type: 'string', example: 'Котел недоступен' } } } } }
+      },
+      InternalServerError: {
+        description: 'Внутренняя ошибка сервера (Код 500)',
+        content: { 'application/json': { schema: { type: 'object', properties: { error: { type: 'string', example: 'Внутренняя ошибка сервера' } } } } }
+      }
     }
   },
   security: [{ cookieAuth: [] }]

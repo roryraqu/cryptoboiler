@@ -5,44 +5,30 @@ const { broadcast } = require('../sse');
 const ApiError = require('../utils/ApiError');
 const router = express.Router();
 
-/**
- * @swagger
- * /api/suricata/rules:
- * get:
- * tags: [Suricata]
- * responses:
- * 200:
- * description: Успешное выполнение
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.get('/rules', async (req, res, next) => {
+  // #swagger.tags = ['Suricata']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const result = await query('SELECT * FROM suricata_rules ORDER BY sid ASC');
     res.json({ rules: result.rows });
   } catch (error) { next(error); }
 });
 
-/**
- * @swagger
- * /api/suricata/rules:
- * post:
- * tags: [Suricata]
- * responses:
- * 201:
- * $ref: '#/components/responses/SuccessCreated'
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.post('/rules', async (req, res, next) => {
+  // #swagger.tags = ['Suricata']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     let { action, protocol, src_ip, src_port, dst_ip, dst_port, msg, sid } = req.body;
     if (!action || !protocol || !src_ip || !src_port || !dst_ip || !dst_port || !msg) {
@@ -62,28 +48,15 @@ router.post('/rules', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-/**
- * @swagger
- * /api/suricata/rules/{id}:
- * put:
- * tags: [Suricata]
- * parameters:
- * - in: path
- * name: id
- * required: true
- * schema:
- * type: string
- * responses:
- * 200:
- * $ref: '#/components/responses/SuccessOK'
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.put('/rules/:id', async (req, res, next) => {
+  // #swagger.tags = ['Suricata']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const { id } = req.params;
     const { action, protocol, src_ip, src_port, dst_ip, dst_port, msg, sid, is_deleted } = req.body;
@@ -111,22 +84,15 @@ router.put('/rules/:id', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-/**
- * @swagger
- * /api/suricata/incidents:
- * get:
- * tags: [Suricata]
- * responses:
- * 200:
- * description: Успешное выполнение
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.get('/incidents', async (req, res, next) => {
+  // #swagger.tags = ['Suricata']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const source = req.query.source;
     const text = source ? 'SELECT * FROM incidents WHERE source = $1 ORDER BY created_at DESC' : 'SELECT * FROM incidents ORDER BY created_at DESC';
@@ -135,28 +101,15 @@ router.get('/incidents', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-/**
- * @swagger
- * /api/suricata/incidents/{id}:
- * put:
- * tags: [Suricata]
- * parameters:
- * - in: path
- * name: id
- * required: true
- * schema:
- * type: string
- * responses:
- * 200:
- * $ref: '#/components/responses/SuccessOK'
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.put('/incidents/:id', async (req, res, next) => {
+  // #swagger.tags = ['Suricata']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const { id } = req.params;
     const { status } = req.body;
@@ -168,44 +121,30 @@ router.put('/incidents/:id', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-/**
- * @swagger
- * /api/suricata/audit-logs:
- * get:
- * tags: [Suricata]
- * responses:
- * 200:
- * description: Успешное выполнение
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.get('/audit-logs', async (req, res, next) => {
+  // #swagger.tags = ['Suricata']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const result = await query(`SELECT a.*, p.email as user_email FROM audit_logs a LEFT JOIN profiles p ON a.user_id = p.id ORDER BY a.created_at DESC`);
     res.json({ logs: result.rows });
   } catch (error) { next(error); }
 });
 
-/**
- * @swagger
- * /api/suricata/audit-logs:
- * post:
- * tags: [Suricata]
- * responses:
- * 201:
- * $ref: '#/components/responses/SuccessCreated'
- * 400:
- * $ref: '#/components/responses/BadRequest'
- * 404:
- * $ref: '#/components/responses/NotFound'
- * 500:
- * $ref: '#/components/responses/InternalServerError'
- */
 router.post('/audit-logs', async (req, res, next) => {
+  // #swagger.tags = ['Suricata']
+  // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
+  // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
+  // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
+  // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
+  // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
+  // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
+  // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
     const { user_id, action, details } = req.body;
     if (!action) throw ApiError.BadRequest('Action is required');
