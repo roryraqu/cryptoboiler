@@ -91,7 +91,7 @@ func statusHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	addrFlag := flag.String("addr", "127.0.0.1:8080", "Listen address for control commands")
+	addrFlag := flag.String("addr", "0.0.0.0:8080", "Listen address for control commands")
 	idFlag := flag.String("id", "boiler-001", "Unique Boiler ID")
 	secretFlag := flag.String("secret", "supersecretkey", "HMAC Secret Key")
 	backendFlag := flag.String("backend", "http://localhost:4000/api/telemetry", "Backend URL")

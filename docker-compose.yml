@@ -34,6 +34,8 @@ services:
   boiler-1:
     build: ./boiler
     container_name: rgr-boiler-1
+    depends_on:
+      - backend
     environment:
       BACKEND_URL: http://backend:4000/api/telemetry
       BOILER_ID: boiler-001
@@ -44,6 +46,8 @@ services:
   boiler-2:
     build: ./boiler
     container_name: rgr-boiler-2
+    depends_on:
+      - backend
     environment:
       BACKEND_URL: http://backend:4000/api/telemetry
       BOILER_ID: boiler-002
@@ -54,6 +58,8 @@ services:
   boiler-3:
     build: ./boiler
     container_name: rgr-boiler-3
+    depends_on:
+      - backend
     environment:
       BACKEND_URL: http://backend:4000/api/telemetry
       BOILER_ID: boiler-003
