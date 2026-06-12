@@ -26,6 +26,8 @@ services:
     container_name: rgr-frontend
     ports:
       - "7443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     networks:
       - rgr-network
 
