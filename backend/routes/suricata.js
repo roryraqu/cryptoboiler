@@ -9,16 +9,12 @@ router.get('/rules', async (req, res, next) => {
   // #swagger.tags = ['Suricata']
   // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
   // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
-  // #swagger.responses[403] = { $ref: '#/components/responses/Forbidden' }
   // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
   // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
   // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
   // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
   // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
-    if (req.user?.role !== 'admin') {
-      throw ApiError.Forbidden('Доступ запрещен. Требуется роль администратора.');
-    }
     const result = await query('SELECT * FROM suricata_rules ORDER BY sid ASC');
     res.json({ rules: result.rows });
   } catch (error) { next(error); }
@@ -28,16 +24,12 @@ router.post('/rules', async (req, res, next) => {
   // #swagger.tags = ['Suricata']
   // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
   // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
-  // #swagger.responses[403] = { $ref: '#/components/responses/Forbidden' }
   // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
   // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
   // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
   // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
   // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
-    if (req.user?.role !== 'admin') {
-      throw ApiError.Forbidden('Доступ запрещен. Требуется роль администратора.');
-    }
     let { action, protocol, src_ip, src_port, dst_ip, dst_port, msg, sid } = req.body;
     if (!action || !protocol || !src_ip || !src_port || !dst_ip || !dst_port || !msg) {
       throw ApiError.BadRequest('All rule fields except sid are required');
@@ -60,16 +52,12 @@ router.put('/rules/:id', async (req, res, next) => {
   // #swagger.tags = ['Suricata']
   // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
   // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
-  // #swagger.responses[403] = { $ref: '#/components/responses/Forbidden' }
   // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
   // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
   // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
   // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
   // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
-    if (req.user?.role !== 'admin') {
-      throw ApiError.Forbidden('Доступ запрещен. Требуется роль администратора.');
-    }
     const { id } = req.params;
     const { action, protocol, src_ip, src_port, dst_ip, dst_port, msg, sid, is_deleted } = req.body;
     const updates = [];
@@ -100,16 +88,12 @@ router.get('/incidents', async (req, res, next) => {
   // #swagger.tags = ['Suricata']
   // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
   // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
-  // #swagger.responses[403] = { $ref: '#/components/responses/Forbidden' }
   // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
   // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
   // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
   // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
   // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
-    if (req.user?.role !== 'admin' && req.user?.role !== 'manager') {
-      throw ApiError.Forbidden('Доступ запрещен. Требуется роль администратора или начальника смены.');
-    }
     const source = req.query.source;
     const text = source ? 'SELECT * FROM incidents WHERE source = $1 ORDER BY created_at DESC' : 'SELECT * FROM incidents ORDER BY created_at DESC';
     const result = source ? await query(text, [source]) : await query(text, []);
@@ -121,16 +105,12 @@ router.put('/incidents/:id', async (req, res, next) => {
   // #swagger.tags = ['Suricata']
   // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
   // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
-  // #swagger.responses[403] = { $ref: '#/components/responses/Forbidden' }
   // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
   // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
   // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
   // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
   // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
-    if (req.user?.role !== 'admin' && req.user?.role !== 'manager') {
-      throw ApiError.Forbidden('Доступ запрещен. Требуется роль администратора или начальника смены.');
-    }
     const { id } = req.params;
     const { status } = req.body;
     if (!status) throw ApiError.BadRequest('Status is required');
@@ -145,16 +125,12 @@ router.get('/audit-logs', async (req, res, next) => {
   // #swagger.tags = ['Suricata']
   // #swagger.responses[200] = { $ref: '#/components/responses/SuccessOK' }
   // #swagger.responses[400] = { $ref: '#/components/responses/BadRequest' }
-  // #swagger.responses[403] = { $ref: '#/components/responses/Forbidden' }
   // #swagger.responses[404] = { $ref: '#/components/responses/NotFound' }
   // #swagger.responses[429] = { $ref: '#/components/responses/TooManyRequests' } 
   // #swagger.responses[502] = { $ref: '#/components/responses/BadGateway' }
   // #swagger.responses[503] = { $ref: '#/components/responses/ServiceUnavailable' }
   // #swagger.responses[500] = { $ref: '#/components/responses/InternalServerError' }
   try {
-    if (req.user?.role !== 'admin') {
-      throw ApiError.Forbidden('Доступ запрещен. Требуется роль администратора.');
-    }
     const result = await query(`SELECT a.*, p.email as user_email FROM audit_logs a LEFT JOIN profiles p ON a.user_id = p.id ORDER BY a.created_at DESC`);
     res.json({ logs: result.rows });
   } catch (error) { next(error); }
