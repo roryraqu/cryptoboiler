@@ -36,6 +36,18 @@
           "201": {
             "description": "Created"
           },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
+          },
           "400": {
             "$ref": "#/components/responses/BadRequest",
             "description": "Bad Request"
@@ -97,6 +109,18 @@
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
           },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
+          },
           "400": {
             "$ref": "#/components/responses/BadRequest",
             "description": "Bad Request"
@@ -152,6 +176,18 @@
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
           },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
+          },
           "400": {
             "$ref": "#/components/responses/BadRequest",
             "description": "Bad Request"
@@ -189,6 +225,18 @@
           "200": {
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
+          },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest",
@@ -243,6 +291,18 @@
           "200": {
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
+          },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest",
@@ -303,6 +363,18 @@
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
           },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
+          },
           "400": {
             "$ref": "#/components/responses/BadRequest",
             "description": "Bad Request"
@@ -340,6 +412,18 @@
           "200": {
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
+          },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest",
@@ -392,6 +476,18 @@
           "200": {
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
+          },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest",
@@ -448,6 +544,18 @@
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
           },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
+          },
           "400": {
             "$ref": "#/components/responses/BadRequest",
             "description": "Bad Request"
@@ -499,6 +607,18 @@
           "200": {
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
+          },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest",
@@ -571,6 +691,18 @@
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
           },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
+          },
           "400": {
             "$ref": "#/components/responses/BadRequest",
             "description": "Bad Request"
@@ -606,6 +738,18 @@
           "200": {
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
+          },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest",
@@ -687,6 +831,18 @@
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
           },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
+          },
           "400": {
             "$ref": "#/components/responses/BadRequest",
             "description": "Bad Request"
@@ -725,6 +881,18 @@
           },
           "201": {
             "description": "Created"
+          },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest",
@@ -790,6 +958,18 @@
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
           },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
+          },
           "400": {
             "$ref": "#/components/responses/BadRequest",
             "description": "Bad Request"
@@ -837,6 +1017,18 @@
           "200": {
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
+          },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest",
@@ -899,6 +1091,18 @@
           "200": {
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
+          },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest",
@@ -972,6 +1176,18 @@
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
           },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
+          },
           "400": {
             "$ref": "#/components/responses/BadRequest",
             "description": "Bad Request"
@@ -1009,6 +1225,18 @@
           "200": {
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
+          },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest",
@@ -1048,6 +1276,18 @@
           },
           "201": {
             "description": "Created"
+          },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest",
@@ -1131,6 +1371,18 @@
           "200": {
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
+          },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest",
@@ -1217,6 +1469,18 @@
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
           },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
+          },
           "400": {
             "$ref": "#/components/responses/BadRequest",
             "description": "Bad Request"
@@ -1264,6 +1528,18 @@
           "200": {
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
+          },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest",
@@ -1317,6 +1593,18 @@
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
           },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
+          },
           "400": {
             "$ref": "#/components/responses/BadRequest",
             "description": "Bad Request"
@@ -1355,6 +1643,18 @@
           },
           "201": {
             "description": "Created"
+          },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest",
@@ -1423,6 +1723,18 @@
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
           },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
+          },
           "400": {
             "$ref": "#/components/responses/BadRequest",
             "description": "Bad Request"
@@ -1470,6 +1782,18 @@
           "200": {
             "description": "OK",
             "$ref": "#/components/responses/SuccessOK"
+          },
+          "301": {
+            "$ref": "#/components/responses/MovedPermanently",
+            "description": "Moved Permanently"
+          },
+          "302": {
+            "$ref": "#/components/responses/Found",
+            "description": "Found"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified",
+            "description": "Not Modified"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest",
@@ -1536,6 +1860,21 @@
       },
       "SuccessCreated": {
         "description": "Успешно создано (Код 201)"
+      },
+      "MovedPermanently": {
+        "description": "Ресурс перемещен навсегда (Код 301)"
+      },
+      "Found": {
+        "description": "Ресурс временно перемещен (Код 302)"
+      },
+      "NotModified": {
+        "description": "Ресурс не изменялся с момента последнего запроса (Код 304)"
+      },
+      "TemporaryRedirect": {
+        "description": "Временное перенаправление (Код 307)"
+      },
+      "PermanentRedirect": {
+        "description": "Постоянное перенаправление (Код 308)"
       },
       "BadRequest": {
         "description": "Неверный синтаксис или ошибка валидации (Код 400)",

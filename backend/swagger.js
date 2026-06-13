@@ -25,6 +25,21 @@ const doc = {
     responses: {
       SuccessOK: { description: 'Успешное выполнение (Код 200)' },
       SuccessCreated: { description: 'Успешно создано (Код 201)' },
+      MovedPermanently: { 
+        description: 'Ресурс перемещен навсегда (Код 301)' 
+      },
+      Found: { 
+        description: 'Ресурс временно перемещен (Код 302)' 
+      },
+      NotModified: { 
+        description: 'Ресурс не изменялся с момента последнего запроса (Код 304)' 
+      },
+      TemporaryRedirect: { 
+        description: 'Временное перенаправление (Код 307)' 
+      },
+      PermanentRedirect: { 
+        description: 'Постоянное перенаправление (Код 308)' 
+      },
       BadRequest: {
         description: 'Неверный синтаксис или ошибка валидации (Код 400)',
         content: { 'application/json': { schema: { type: 'object', properties: { error: { type: 'string', example: 'Сервер не понял запрос' } } } } }
